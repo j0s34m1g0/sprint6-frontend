@@ -1,19 +1,22 @@
 import React, { Component } from "react";
+import { correo } from "./Profile";
 
 class Ventas extends Component {
   constructor() {
     super();
     this.state = {
-      totalVenta: "",
-      idProducto: "",
-      cantidad: "",
-      precioUnitario: "",
-      fechaVenta: "",
-      cedulaCliente: "",
       nombreCliente: "",
-      idVendedor: "",
+      cedulaCliente: "",
+      nombreVendedor: "",
+      estadoVenta: "",
+      fechaVenta: "",
+      valorVenta: "",
+      descripcionVenta: "",
+      updateTo: correo,
       ventas: [],
       _id: "",
+      ventasBackup: "",
+      textBuscar: "",
     };
     this.handleChange = this.handleChange.bind(this);
     this.addVenta = this.addVenta.bind(this);
@@ -32,21 +35,18 @@ class Ventas extends Component {
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
+
           this.setState({
-            totalVenta: "",
-            idProducto: "",
-            cantidad: "",
-            precioUnitario: "",
-            fechaVenta: "",
-            cedulaCliente: "",
             nombreCliente: "",
-            idVendedor: "",
-            _id: "",
+            cedulaCliente: "",
+            nombreVendedor: "",
+            estadoVenta: "",
+            fechaVenta: "",
+            valorVenta: "",
+            descripcionVenta: "",
           });
           this.obtenerVentas();
         });
-    } else {
-      alert("Solo se puede actualizar una venta");
     }
     e.preventDefault();
   }
@@ -59,27 +59,11 @@ class Ventas extends Component {
     fetch("https://sprint6backend.herokuapp.com/ventas")
       .then((res) => res.json())
       .then((data) => {
-        this.setState({ ventas: data, productoBackup: data });
+        this.setState({ ventas: data, ventasBackup: data });
       });
   }
 
-  deleteVentas(id) {
-    fetch("https://sprint6backend.herokuapp.com/ventas/" + id, {
-      method: "DELETE",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-
-        this.obtenerVentas();
-      });
-  }
-
-  editVentas(id) {
+  editVenta(id) {
     fetch("https://sprint6backend.herokuapp.com/ventas/" + id)
       .then((res) => res.json())
       .then((data) => {
@@ -87,7 +71,8 @@ class Ventas extends Component {
         this.setState({
           nombreCliente: data.nombreCliente,
           cedulaCliente: data.cedulaCliente,
-          valorTotalVenta: data.valorTotalVenta,
+          nombreVendedor: data.nombreVendedor,
+          estadoVenta: data.estadoVenta,
           _id: data._id,
         });
       });
@@ -100,12 +85,36 @@ class Ventas extends Component {
     });
   }
 
+  filter(event) {
+    var text = event.target.value;
+    const data = this.state.ventasBackup;
+    const newData = data.filter(function (item) {
+      const itemData1 = item.nombreCliente.toUpperCase();
+      const itemData2 = item.cedulaCliente.toUpperCase();
+      const itemData3 = item.nombreVendedor.toUpperCase();
+      const itemData4 = item.estadoVenta.toUpperCase();
+      const itemData =
+        itemData1 + "" + itemData2 + "" + itemData3 + "" + itemData4;
+      const textData = text.toUpperCase();
+      return itemData.indexOf(textData) > -1;
+    });
+    this.setState({
+      ventas: newData,
+      text: text,
+    });
+  }
+
   render() {
     return (
       <div>
         <nav class="light-green darken-1">
-          <h3 class="brand-logo center">VENTAS</h3>
+          <h3>VENTAS</h3>
         </nav>
+        <div class="red" className="row">
+          <a href="/">
+            <h3>Atrás</h3>
+          </a>
+        </div>
         <div className="container">
           <div className="row">
             <div className="col s5">
@@ -114,22 +123,11 @@ class Ventas extends Component {
                   <form onSubmit={this.addVenta}>
                     <div className="row">
                       <div className="input-field col s12">
-                        <input
+                        <textarea
                           value={this.state.nombreCliente}
                           name="nombreCliente"
                           onChange={this.handleChange}
-                          type="text"
-                          placeholder="Nombre del Cliente"
-                        />
-                      </div>
-                    </div>
-                    <div className="row">
-                      <div className="input-field col s12">
-                        <textarea
-                          value={this.state.cedulaCliente}
-                          name="cedulaCliente"
-                          onChange={this.handleChange}
-                          placeholder="Cedula del Cliente"
+                          placeholder="nombre del cliente"
                           className="materialize-textarea"
                         ></textarea>
                       </div>
@@ -137,27 +135,58 @@ class Ventas extends Component {
                     <div className="row">
                       <div className="input-field col s12">
                         <input
-                          value={this.state.valorTotalVenta}
-                          name="valorTotalVenta"
+                          value={this.state.cedulaCliente}
+                          name="cedulaCliente"
                           onChange={this.handleChange}
                           type="number"
-                          placeholder="Precio total de la venta"
+                          placeholder="cedula del cliente"
+                        />
+                      </div>
+                    </div>
+                    <div className="row">
+                      <div className="input-field col s12">
+                        <input
+                          value={this.state.nombreVendedor}
+                          name="nombreVendedor"
+                          onChange={this.handleChange}
+                          type="text"
+                          placeholder="vendedor"
+                        />
+                      </div>
+                    </div>
+                    <div className="row">
+                      <div className="input-field col s12">
+                        <input
+                          value={this.state.estadoVenta}
+                          name="estadoVenta"
+                          onChange={this.handleChange}
+                          type="text"
+                          placeholder="Cancelada o Entregada"
                         />
                       </div>
                     </div>
                     <button type="submit" className="btn green darken-3">
-                      Enviar
+                      Actualizar Venta
                     </button>
                   </form>
                 </div>
               </div>
             </div>
             <div className="col s7">
+              <input
+                placeholder="Buscar venta"
+                class="form-control"
+                value={this.state.text}
+                onChange={(text) => this.filter(text)}
+              />
               <table>
                 <thead>
-                  <th>Cliente</th>
-                  <th>Cedula</th>
-                  <th>Valor de la venta</th>
+                  <th>cliente</th>
+                  <th>cedula</th>
+                  <th>vendedor</th>
+                  <th>estado venta</th>
+                  <th>valor</th>
+                  <th>actualizado por:</th>
                 </thead>
                 <tbody>
                   {this.state.ventas.map((ventas) => {
@@ -165,18 +194,14 @@ class Ventas extends Component {
                       <tr key={ventas._id}>
                         <td>{ventas.nombreCliente}</td>
                         <td>{ventas.cedulaCliente}</td>
-                        <td>{ventas.valorTotalVenta}</td>
+                        <td>{ventas.nombreVendedor}</td>
+                        <td>{ventas.estadoVenta}</td>
+                        <td>{ventas.valorVenta}</td>
+                        <td>{ventas.updateTo}</td>
                         <td>
                           <button
-                            className="btn red"
-                            onClick={() => this.deleteVentas(ventas._id)}
-                          >
-                            <i className="material-icons">delete</i>
-                          </button>
-                          <></>
-                          <button
                             className="btn yellow darken-3"
-                            onClick={() => this.editVentas(ventas._id)}
+                            onClick={() => this.editVenta(ventas._id)}
                           >
                             <i className="material-icons">edit</i>
                           </button>

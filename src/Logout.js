@@ -5,7 +5,7 @@ export const LogoutButton = () => {
   const { logout } = useAuth0();
 
   return (
-    <button class="waves-effect waves-light btn" onClick={() => logout({ returnTo: window.location.origin })}>
+    <button class="waves-effect red btn" onClick={() => logout({ returnTo: window.location.origin })}>
       Cerrar Sesión
     </button>
   );

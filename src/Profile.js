@@ -4,11 +4,13 @@ import { LogoutButton } from "./Logout";
 import Productos from "./Productos";
 import ReactDOM from "react-dom";
 import RealizarVenta from "./RealizarVenta";
+import Usuarios from "./Usuarios";
+import Ventas from "./Ventas";
 
 let usuarios;
 let correo;
 
-export {correo};
+export { correo };
 
 const Profile = () => {
   const { user, isAuthenticated, isLoading } = useAuth0();
@@ -38,7 +40,15 @@ const Profile = () => {
   };
 
   const vender = () => {
-    return ReactDOM.render(<RealizarVenta/>, document.getElementById("root"));
+    return ReactDOM.render(<RealizarVenta />, document.getElementById("root"));
+  };
+
+  const usuarioss = () => {
+    return ReactDOM.render(<Usuarios />, document.getElementById("root"));
+  };
+
+  const ventass = () => {
+    return ReactDOM.render(<Ventas />, document.getElementById("root"));
   };
 
   if (estado === "admin") {
@@ -46,33 +56,49 @@ const Profile = () => {
       isAuthenticated && (
         <div className="container">
           <div className="row">
-            <div className="col s9">
+            <div className="col s11">
               <div className="card">
                 <div className="card-content">
                   <img src={user.picture} alt={user.name} />
-                  <h2>Bienvenido {user.name}</h2>
+                  <h2>{user.name}</h2>
                   <h4>Email: {(correo = user.email)}</h4>
                   <LogoutButton />
                   <h4>Perfil: Administrador</h4>
-                  <div className="container">
+                  <div>
                     <table>
                       <thead>
                         <th>
-                      <button
-                        class="waves-effect waves-light btn"
-                        onClick={() => productos()}
-                      >
-                        Productos
-                      </button>
-                      </th>
-                      <th>
-                      <button
-                        class="waves-effect waves-light btn"
-                        onClick={() => vender()}
-                      >
-                        Realizar Venta
-                      </button>
-                      </th>
+                          <button
+                            class="waves-effect deep-purple darken-1 btn"
+                            onClick={() => productos()}
+                          >
+                            Gestionar Productos
+                          </button>
+                        </th>
+                        <th>
+                          <button
+                            class="waves-effect deep-purple darken-1 btn"
+                            onClick={() => vender()}
+                          >
+                            Realizar Venta
+                          </button>
+                        </th>
+                        <th>
+                          <button
+                            class="waves-effect deep-purple darken-1 btn"
+                            onClick={() => usuarioss()}
+                          >
+                            Gestionar Usuarios
+                          </button>
+                        </th>
+                        <th>
+                          <button
+                            class="waves-effect deep-purple darken-1 btn"
+                            onClick={() => ventass()}
+                          >
+                            Actualizar Ventas
+                          </button>
+                        </th>
                       </thead>
                     </table>
                   </div>
@@ -83,9 +109,7 @@ const Profile = () => {
         </div>
       )
     );
-  }
-
-  if (estado === "vendedor") {
+  } else if (estado === "vendedor") {
     return (
       isAuthenticated && (
         <div className="container">
@@ -94,10 +118,55 @@ const Profile = () => {
               <div className="card">
                 <div className="card-content">
                   <img src={user.picture} alt={user.name} />
-                  <h2>Bienvenido {user.name}</h2>
+                  <h2>{user.name}</h2>
                   <h4>Email: {(correo = user.email)}</h4>
                   <LogoutButton />
-                  <h4>Perfil: {estado}</h4>               
+                  <h4>Perfil: {estado}</h4>
+                  <div>
+                    <table>
+                      <thead>
+                        <th>
+                          <button
+                            class="waves-effect deep-purple darken-1 btn"
+                            onClick={() => vender()}
+                          >
+                            Realizar Venta
+                          </button>
+                        </th>
+                        <th>
+                          <button
+                            class="waves-effect deep-purple darken-1 btn"
+                            onClick={() => ventass()}
+                          >
+                            Actualizar Ventas
+                          </button>
+                        </th>
+                      </thead>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    );
+  } else {
+    return (
+      isAuthenticated && (
+        <div className="container">
+          <div className="row">
+            <div className="col s9">
+              <div className="card">
+                <div className="card-content">
+                  <img src={user.picture} alt={user.name} />
+                  <h2>{user.name}</h2>
+                  <h4>Email: {(correo = user.email)}</h4>
+                  <LogoutButton />
+                  <h4>
+                    Perfil: Pendiente por definir, comuniquese con el área
+                    encargada
+                  </h4>
                 </div>
               </div>
             </div>
@@ -106,26 +175,6 @@ const Profile = () => {
       )
     );
   }
-
-  return (
-    isAuthenticated && (
-      <div className="container">
-        <div className="row">
-          <div className="col s9">
-            <div className="card">
-              <div className="card-content">
-                <img src={user.picture} alt={user.name} />
-                <h2>Bienvenido {user.name}</h2>
-                <h4>Email: {(correo = user.email)}</h4>
-                <LogoutButton />
-                <h4>Perfil: {estado}</h4>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  );
 };
 
 export default Profile;

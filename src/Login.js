@@ -10,8 +10,9 @@ export const LoginButton = () => {
         <div className="row">
           <div className="col s9">
             <div className="card">
-              <div className="card-content">
-                <h3>Sprint6</h3>
+              <div className="card-content" background-image= "../images/">
+                <h3>SOFTDANA</h3>
+                <hr/>
                 <button
                   class="waves-effect waves-light btn"
                   onClick={() => loginWithPopup()}
