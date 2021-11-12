@@ -33,7 +33,7 @@ class Productos extends Component {
         .then((data) => {
           console.log(data);
 
-          this.setState({ nombre: "", descripcion: "", precio: "" });
+          this.setState({ descripcion: "", precio: "", estado: ""});
           this.obtenerProductos();
         });
     } else {
@@ -49,7 +49,7 @@ class Productos extends Component {
         .then((data) => {
           console.log(data);
 
-          this.setState({ estado: "", descripcion: "", precio: "" });
+          this.setState({ descripcion: "", precio: "", estado: "" });
           this.obtenerProductos();
         })
         .catch((err) => console.error(err));
