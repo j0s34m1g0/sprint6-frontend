@@ -1,22 +1,27 @@
 import React, { Component } from "react";
 
-class AppBdVentas extends Component {
+class Ventas extends Component {
   constructor() {
     super();
     this.state = {
-      nombreCliente: "",
+      totalVenta: "",
+      idProducto: "",
+      cantidad: "",
+      precioUnitario: "",
+      fechaVenta: "",
       cedulaCliente: "",
-      valorTotalVenta: "",
+      nombreCliente: "",
+      idVendedor: "",
       ventas: [],
       _id: "",
     };
     this.handleChange = this.handleChange.bind(this);
-    this.addProducto = this.addProducto.bind(this);
+    this.addVenta = this.addVenta.bind(this);
   }
 
-  addProducto(e) {
+  addVenta(e) {
     if (this.state._id) {
-      fetch("http://localhost:3000/api/ventas/" + this.state._id, {
+      fetch("https://sprint6backend.herokuapp.com/ventas/" + this.state._id, {
         method: "PUT",
         body: JSON.stringify(this.state),
         headers: {
@@ -27,16 +32,22 @@ class AppBdVentas extends Component {
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
-            
           this.setState({
-            nombreCliente: "",
+            totalVenta: "",
+            idProducto: "",
+            cantidad: "",
+            precioUnitario: "",
+            fechaVenta: "",
             cedulaCliente: "",
-            valorTotalVenta: "",
+            nombreCliente: "",
+            idVendedor: "",
             _id: "",
           });
           this.obtenerVentas();
         });
-    }  
+    } else {
+      alert("Solo se puede actualizar una venta");
+    }
     e.preventDefault();
   }
 
@@ -45,7 +56,7 @@ class AppBdVentas extends Component {
   }
 
   obtenerVentas() {
-    fetch("http://localhost:3000/api/ventas")
+    fetch("https://sprint6backend.herokuapp.com/ventas")
       .then((res) => res.json())
       .then((data) => {
         this.setState({ ventas: data, productoBackup: data });
@@ -53,25 +64,23 @@ class AppBdVentas extends Component {
   }
 
   deleteVentas(id) {
-    
-      fetch("http://localhost:3000/api/ventas/" + id, {
-        method: "DELETE",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data);
-           
-          this.obtenerVentas();
-        });
-    }
-  
+    fetch("https://sprint6backend.herokuapp.com/ventas/" + id, {
+      method: "DELETE",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+
+        this.obtenerVentas();
+      });
+  }
 
   editVentas(id) {
-    fetch("http://localhost:3000/api/ventas/" + id)
+    fetch("https://sprint6backend.herokuapp.com/ventas/" + id)
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
@@ -102,7 +111,7 @@ class AppBdVentas extends Component {
             <div className="col s5">
               <div className="card">
                 <div className="card-content">
-                  <form onSubmit={this.addProducto}>
+                  <form onSubmit={this.addVenta}>
                     <div className="row">
                       <div className="input-field col s12">
                         <input
@@ -185,4 +194,4 @@ class AppBdVentas extends Component {
   }
 }
 
-export default AppBdVentas;
+export default Ventas;

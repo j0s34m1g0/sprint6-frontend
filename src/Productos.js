@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 
-class AppProductos extends Component {
+class Productos extends Component {
   constructor() {
     super();
     this.state = {
-      nombre: "",
       descripcion: "",
       precio: "",
+      estado: "",
       productos: [],
       _id: "",
       productoBackup: "",
@@ -18,23 +18,26 @@ class AppProductos extends Component {
 
   addProducto(e) {
     if (this.state._id) {
-      fetch("http://localhost:3000/api/products/" + this.state._id, {
-        method: "PUT",
-        body: JSON.stringify(this.state),
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      })
+      fetch(
+        "https://sprint6backend.herokuapp.com/productos/" + this.state._id,
+        {
+          method: "PUT",
+          body: JSON.stringify(this.state),
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      )
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
-           
+
           this.setState({ nombre: "", descripcion: "", precio: "" });
           this.obtenerProductos();
         });
     } else {
-      fetch("http://localhost:3000/api/products", {
+      fetch("https://sprint6backend.herokuapp.com/productos", {
         method: "POST",
         body: JSON.stringify(this.state),
         headers: {
@@ -45,8 +48,8 @@ class AppProductos extends Component {
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
-           
-          this.setState({ nombre: "", descripcion: "", precio: "" });
+
+          this.setState({ estado: "", descripcion: "", precio: "" });
           this.obtenerProductos();
         })
         .catch((err) => console.error(err));
@@ -59,7 +62,7 @@ class AppProductos extends Component {
   }
 
   obtenerProductos() {
-    fetch("http://localhost:3000/api/products")
+    fetch("https://sprint6backend.herokuapp.com/productos")
       .then((res) => res.json())
       .then((data) => {
         this.setState({ productos: data, productoBackup: data });
@@ -67,32 +70,29 @@ class AppProductos extends Component {
   }
 
   deleteProducto(id) {
-    
-      fetch("http://localhost:3000/api/products/" + id, {
-        method: "DELETE",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data);
-           
-          this.obtenerProductos();
-        });
-    }
-  
+    fetch("https://sprint6backend.herokuapp.com/productos/" + id, {
+      method: "DELETE",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        this.obtenerProductos();
+      });
+  }
 
   editProducto(id) {
-    fetch("http://localhost:3000/api/products/" + id)
+    fetch("https://sprint6backend.herokuapp.com/productos/" + id)
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
         this.setState({
-          nombre: data.nombre,
           descripcion: data.descripcion,
           precio: data.precio,
+          estado: data.estado,
           _id: data._id,
         });
       });
@@ -109,8 +109,8 @@ class AppProductos extends Component {
     var text = event.target.value;
     const data = this.state.productoBackup;
     const newData = data.filter(function (item) {
-      const itemData1 = item.nombre.toUpperCase();
-      const itemData2 = item.descripcion.toUpperCase();
+      const itemData1 = item.descripcion.toUpperCase();
+      const itemData2 = item.estado.toUpperCase();
       const itemData = itemData1 + "" + itemData2;
       const textData = text.toUpperCase();
       return itemData.indexOf(textData) > -1;
@@ -124,26 +124,20 @@ class AppProductos extends Component {
   render() {
     return (
       <div>
-        <nav class="light-green darken-1">
+        <nav class="light-green darken-1">          
           <h3>PRODUCTOS</h3>
         </nav>
+        <div class = "red" className="row">
+          <a href="/"> 
+          <h3>Atrás</h3>         
+          </a>
+        </div>
         <div className="container">
           <div className="row">
             <div className="col s5">
               <div className="card">
                 <div className="card-content">
                   <form onSubmit={this.addProducto}>
-                    <div className="row">
-                      <div className="input-field col s12">
-                        <input
-                          value={this.state.nombre}
-                          name="nombre"
-                          onChange={this.handleChange}
-                          type="text"
-                          placeholder="Nombre del producto"
-                        />
-                      </div>
-                    </div>
                     <div className="row">
                       <div className="input-field col s12">
                         <textarea
@@ -166,6 +160,17 @@ class AppProductos extends Component {
                         />
                       </div>
                     </div>
+                    <div className="row">
+                      <div className="input-field col s12">
+                        <input
+                          value={this.state.estado}
+                          name="estado"
+                          onChange={this.handleChange}
+                          type="text"
+                          placeholder="Estado del producto"
+                        />
+                      </div>
+                    </div>
                     <button type="submit" className="btn green darken-3">
                       Registrar Producto
                     </button>
@@ -182,17 +187,17 @@ class AppProductos extends Component {
               />
               <table>
                 <thead>
-                  <th>Nombre producto</th>
                   <th>Descripcion producto</th>
                   <th>Precio producto</th>
+                  <th>Estado producto</th>
                 </thead>
                 <tbody>
                   {this.state.productos.map((productos) => {
                     return (
                       <tr key={productos._id}>
-                        <td>{productos.nombre}</td>
                         <td>{productos.descripcion}</td>
                         <td>{productos.precio}</td>
+                        <td>{productos.estado}</td>
                         <td>
                           <button
                             className="btn red"
@@ -221,4 +226,4 @@ class AppProductos extends Component {
   }
 }
 
-export default AppProductos;
+export default Productos;

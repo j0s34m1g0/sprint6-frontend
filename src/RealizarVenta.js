@@ -4,13 +4,13 @@ let carrito = [];
 let subtot;
 let ventas;
 
-const AppVentas = () => {
+const RealizarVenta = () => {
   const [productos, setProductos] = React.useState([]);
   const [productosCarrito, setProductosCarrito] = React.useState([]);
   const [total, setTotal] = React.useState(0);
 
   React.useEffect(() => {
-    fetch("http://localhost:3000/api/products")
+    fetch("https://sprint6backend.herokuapp.com/productos")
       .then((res) => res.json())
       .then((data) => {
         setProductos(data);
@@ -19,32 +19,48 @@ const AppVentas = () => {
 
   const addProductoCart = (id) => {
     let cant = prompt("Cantidad");
-    for (let i in productos) {
-      for (let j in productos[i]) {
-        if (productos[i][j] === id) {
-          subtot = Number(cant) * productos[i].precio;
-          carrito.push({
-            _id: productos[i]._id,
-            nombre: productos[i].nombre,
-            precio: productos[i].precio,
-            cantidad: cant,
-            subtotal: subtot,
-          });
-          setProductosCarrito(carrito);
-          setTotal(total + subtot);
+    if (cant === null || cant === "" || cant === "0") {
+      alert("Ingrese la cantidad en numeros");
+    } else {
+      for (let i in productos) {
+        for (let j in productos[i]) {
+          if (productos[i][j] === id) {
+            subtot = Number(cant) * productos[i].precio;
+            if (isNaN(subtot)) {
+              alert("Ingrese la cantidad en numeros");
+            } else {
+              carrito.push({
+                _id: productos[i]._id,
+                nombre: productos[i].descripcion,
+                precio: productos[i].precio,
+                cantidad: Number(cant),
+                subtotal: subtot,
+              });
+              setProductosCarrito(carrito);
+              setTotal(total + subtot);
+              break;
+            }
+          }
         }
       }
     }
-    console.log("carrito", carrito);
   };
 
   const delProductoCarrito = (id) => {
-    for (let i in productosCarrito) {
-      for (let j in productosCarrito[i]) {
-        if (productosCarrito[i][j] === id) {
-          let sub = productosCarrito[i].subtotal;
-          carrito.splice(i, 1);
-          setTotal(total - sub);
+    console.log(id);
+    if (productosCarrito.length === 1) {
+      let sub = productosCarrito[0].subtotal;
+      carrito.splice(0, 1);
+      setTotal(total - sub);
+    } else if (productosCarrito.length > 1) {
+      for (let i in productosCarrito) {
+        for (let j in productosCarrito[i]) {
+          if (productosCarrito[i][j] === id) {
+            let sub = productosCarrito[i].subtotal;
+            carrito.splice(i, 1);
+            setTotal(total - sub);
+            break;
+          }
         }
       }
     }
@@ -52,7 +68,13 @@ const AppVentas = () => {
 
   const addVenta = () => {
     let nombre = prompt("Nombre del cliente");
+    if (nombre === null || nombre === "") {
+      alert("Ingrese un nombre valido");
+    }
     let cedula = prompt("Cedula del client");
+    if (cedula === null || cedula === "") {
+      alert("Ingrese una cedula valida");
+    }
     ventas = {
       nombreCliente: nombre,
       cedulaCliente: cedula,
@@ -69,7 +91,7 @@ const AppVentas = () => {
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-         
+
         carrito = [];
         subtot = 0;
         ventas = [];
@@ -83,10 +105,13 @@ const AppVentas = () => {
     <>
       <div>
         <nav class="light-green darken-1">
-          <h3 >
-            REALIZAR VENTA
-          </h3>
+          <h3>REALIZAR VENTA</h3>
         </nav>
+        <div class = "red" className="row">
+          <a href="/"> 
+          <h3>Atrás</h3>         
+          </a>
+        </div>
       </div>
       <div>
         <div className="row">
@@ -94,7 +119,10 @@ const AppVentas = () => {
             <div className="card">
               <div className="card-content">
                 <td>
-                  <button className="btn green darken-3" onClick={() => addVenta()}>
+                  <button
+                    className="btn green darken-3"
+                    onClick={() => addVenta()}
+                  >
                     REALIZAR VENTA
                   </button>
                 </td>
@@ -141,17 +169,17 @@ const AppVentas = () => {
           <div className="col s7">
             <table>
               <thead>
-                <th>Nombre producto</th>
-                <th>Descripcion producto</th>
-                <th>Precio producto</th>
+                <th>Descripcion</th>
+                <th>Precio</th>
+                <th>Estado</th>
               </thead>
               <tbody>
                 {productos.map((productos) => {
                   return (
                     <tr key={productos._id}>
-                      <td>{productos.nombre}</td>
                       <td>{productos.descripcion}</td>
                       <td>{productos.precio}</td>
+                      <td>{productos.estado}</td>
                       <td>
                         <button
                           className="btn blue"
@@ -173,4 +201,4 @@ const AppVentas = () => {
   );
 };
 
-export default AppVentas;
+export default RealizarVenta;
