@@ -1,8 +1,10 @@
 import React from "react";
+import {correo} from "./Profile";
 
 let carrito = [];
 let subtot;
 let ventas;
+let fecha = new Date();
 
 const RealizarVenta = () => {
   const [productos, setProductos] = React.useState([]);
@@ -14,6 +16,7 @@ const RealizarVenta = () => {
       .then((res) => res.json())
       .then((data) => {
         setProductos(data);
+        console.log(correo);
       });
   }, []);
 
@@ -76,11 +79,15 @@ const RealizarVenta = () => {
       alert("Ingrese una cedula valida");
     }
     ventas = {
-      nombreCliente: nombre,
+      nombreCliente: nombre, 
       cedulaCliente: cedula,
-      valorTotalVenta: total,
+      nombreVendedor: correo, 
+      estadoVenta: "En proceso", 
+      fechaVenta: fecha, 
+      valorVenta: total,
+      descripcionVenta: carrito
     };
-    fetch("http://localhost:3000/api/ventas", {
+    fetch("https://sprint6backend.herokuapp.com/ventas", {
       method: "POST",
       body: JSON.stringify(ventas),
       headers: {
@@ -91,12 +98,12 @@ const RealizarVenta = () => {
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-
         carrito = [];
         subtot = 0;
         ventas = [];
         setProductosCarrito([]);
         setTotal(0);
+        alert('La venta se ha realizado exitosamente');
       })
       .catch((err) => console.error(err));
   };
@@ -107,9 +114,9 @@ const RealizarVenta = () => {
         <nav class="light-green darken-1">
           <h3>REALIZAR VENTA</h3>
         </nav>
-        <div class = "red" className="row">
-          <a href="/"> 
-          <h3>Atrás</h3>         
+        <div class="red" className="row">
+          <a href="/">
+            <h3>Atrás</h3>
           </a>
         </div>
       </div>

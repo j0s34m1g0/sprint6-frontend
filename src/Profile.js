@@ -8,6 +8,8 @@ import RealizarVenta from "./RealizarVenta";
 let usuarios;
 let correo;
 
+export {correo};
+
 const Profile = () => {
   const { user, isAuthenticated, isLoading } = useAuth0();
   const [estado, setEstado] = React.useState();
@@ -21,6 +23,7 @@ const Profile = () => {
           if (usuarios[i].correo === correo) {
             console.log(usuarios[i].correo, usuarios[i].cargo);
             setEstado(usuarios[i].cargo);
+            console.log(correo);
           }
         }
       });
