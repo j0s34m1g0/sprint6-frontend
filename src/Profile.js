@@ -1,19 +1,19 @@
 import React from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { LogoutButton } from "./Logout";
-import Productos from "./Productos";
 import ReactDOM from "react-dom";
-import RealizarVenta from "./RealizarVenta";
-import Usuarios from "./Usuarios";
-import Ventas from "./Ventas";
+import Admin from "./Admin";
+import Vendedor from "./Vendedor";
+import { LogoutButton } from "./Logout";
 
 let usuarios;
 let correo;
+let estado2;
 
 export { correo };
+export { estado2 };
 
 const Profile = () => {
-  const { user, isAuthenticated, isLoading } = useAuth0();
+  const { user, isAuthenticated } = useAuth0();
   const [estado, setEstado] = React.useState();
 
   React.useEffect(() => {
@@ -25,33 +25,21 @@ const Profile = () => {
           if (usuarios[i].correo === correo) {
             console.log(usuarios[i].correo, usuarios[i].cargo);
             setEstado(usuarios[i].cargo);
-            console.log(correo);
           }
         }
       });
   }, []);
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  const productos = () => {
-    return ReactDOM.render(<Productos />, document.getElementById("root"));
+  const adminn = () => {
+    return ReactDOM.render(<Admin />, document.getElementById("root"));
   };
 
-  const vender = () => {
-    return ReactDOM.render(<RealizarVenta />, document.getElementById("root"));
-  };
-
-  const usuarioss = () => {
-    return ReactDOM.render(<Usuarios />, document.getElementById("root"));
-  };
-
-  const ventass = () => {
-    return ReactDOM.render(<Ventas />, document.getElementById("root"));
+  const vendedor = () => {
+    return ReactDOM.render(<Vendedor />, document.getElementById("root"));
   };
 
   if (estado === "admin") {
+    estado2 = "admin";
     return (
       isAuthenticated && (
         <div className="container">
@@ -62,7 +50,6 @@ const Profile = () => {
                   <img src={user.picture} alt={user.name} />
                   <h2>{user.name}</h2>
                   <h4>Email: {(correo = user.email)}</h4>
-                  <LogoutButton />
                   <h4>Perfil: Administrador</h4>
                   <div>
                     <table>
@@ -70,35 +57,13 @@ const Profile = () => {
                         <th>
                           <button
                             class="waves-effect deep-purple darken-1 btn"
-                            onClick={() => productos()}
+                            onClick={() => adminn()}
                           >
-                            Gestionar Productos
+                            Modulos Admin
                           </button>
                         </th>
-                        <th>
-                          <button
-                            class="waves-effect deep-purple darken-1 btn"
-                            onClick={() => vender()}
-                          >
-                            Realizar Venta
-                          </button>
-                        </th>
-                        <th>
-                          <button
-                            class="waves-effect deep-purple darken-1 btn"
-                            onClick={() => usuarioss()}
-                          >
-                            Gestionar Usuarios
-                          </button>
-                        </th>
-                        <th>
-                          <button
-                            class="waves-effect deep-purple darken-1 btn"
-                            onClick={() => ventass()}
-                          >
-                            Actualizar Ventas
-                          </button>
-                        </th>
+                        <LogoutButton />
+                        <th></th>
                       </thead>
                     </table>
                   </div>
@@ -110,6 +75,7 @@ const Profile = () => {
       )
     );
   } else if (estado === "vendedor") {
+    estado2 = "vendedor";
     return (
       isAuthenticated && (
         <div className="container">
@@ -120,7 +86,6 @@ const Profile = () => {
                   <img src={user.picture} alt={user.name} />
                   <h2>{user.name}</h2>
                   <h4>Email: {(correo = user.email)}</h4>
-                  <LogoutButton />
                   <h4>Perfil: {estado}</h4>
                   <div>
                     <table>
@@ -128,19 +93,13 @@ const Profile = () => {
                         <th>
                           <button
                             class="waves-effect deep-purple darken-1 btn"
-                            onClick={() => vender()}
+                            onClick={() => vendedor()}
                           >
-                            Realizar Venta
+                            Modulos Vendedor
                           </button>
                         </th>
-                        <th>
-                          <button
-                            class="waves-effect deep-purple darken-1 btn"
-                            onClick={() => ventass()}
-                          >
-                            Actualizar Ventas
-                          </button>
-                        </th>
+                        <LogoutButton />
+                        <th></th>
                       </thead>
                     </table>
                   </div>
@@ -162,7 +121,6 @@ const Profile = () => {
                   <img src={user.picture} alt={user.name} />
                   <h2>{user.name}</h2>
                   <h4>Email: {(correo = user.email)}</h4>
-                  <LogoutButton />
                   <h4>
                     Perfil: Pendiente por definir, comuniquese con el área
                     encargada

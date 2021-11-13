@@ -1,5 +1,9 @@
 import React from "react";
 import {correo} from "./Profile";
+import {estado2} from "./Profile";
+import Admin from "./Admin";
+import Vendedor from "./Vendedor";
+import ReactDOM from "react-dom";
 
 let carrito = [];
 let subtot;
@@ -108,17 +112,37 @@ const RealizarVenta = () => {
       .catch((err) => console.error(err));
   };
 
+  const atras = () => {
+    if (estado2 === "admin"){
+      return ReactDOM.render(<Admin />, document.getElementById("root"));
+    }
+    else if  (estado2 === "vendedor"){
+      return ReactDOM.render(<Vendedor />, document.getElementById("root"));
+    }   
+  }
+
   return (
     <>
       <div>
-        <nav class="light-green darken-1">
-          <h3>REALIZAR VENTA</h3>
+      <nav class="cyan darken-1">
+          <table>
+            <thead size="large">
+              <h4>REALIZAR VENTA</h4>
+            </thead>
+          </table>
         </nav>
-        <div class="red" className="row">
-          <a href="/">
-            <h3>Atrás</h3>
-          </a>
-        </div>
+        <nav class="cyan darken-2">
+          <table>
+            <thead>
+              <button
+                class="waves-effect  green darken-1 btn"
+                onClick={() => atras()}
+              >
+                Atrás
+              </button>
+            </thead>
+          </table>
+        </nav>
       </div>
       <div>
         <div className="row">

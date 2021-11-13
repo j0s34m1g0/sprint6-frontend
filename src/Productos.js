@@ -1,4 +1,8 @@
 import React, { Component } from "react";
+import ReactDOM from "react-dom";
+import {estado2} from "./Profile";
+import Admin from "./Admin";
+import Vendedor from "./Vendedor";
 
 class Productos extends Component {
   constructor() {
@@ -33,7 +37,7 @@ class Productos extends Component {
         .then((data) => {
           console.log(data);
 
-          this.setState({ descripcion: "", precio: "", estado: ""});
+          this.setState({ descripcion: "", precio: "", estado: "" });
           this.obtenerProductos();
         });
     } else {
@@ -121,17 +125,37 @@ class Productos extends Component {
     });
   }
 
+  atras() {
+    if (estado2 === "admin"){
+      return ReactDOM.render(<Admin />, document.getElementById("root"));
+    }
+    else if  (estado2 === "vendedor"){
+      return ReactDOM.render(<Vendedor />, document.getElementById("root"));
+    }   
+  }
+
   render() {
     return (
       <div>
-        <nav class="light-green darken-1">          
-          <h3>PRODUCTOS</h3>
+        <nav class="cyan darken-1">
+          <table>
+            <thead size="large">
+              <h4>PRODUCTOS</h4>
+            </thead>
+          </table>
         </nav>
-        <div class = "red" className="row">
-          <a href="/"> 
-          <h3>Atrás</h3>         
-          </a>
-        </div>
+        <nav class="cyan darken-2">
+          <table>
+            <thead>
+              <button
+                class="waves-effect  green darken-1 btn"
+                onClick={() => this.atras()}
+              >
+                Atrás
+              </button>
+            </thead>
+          </table>
+        </nav>
         <div className="container">
           <div className="row">
             <div className="col s5">
